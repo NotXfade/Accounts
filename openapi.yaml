@@ -1,0 +1,2841 @@
+openapi: 3.0.0
+info:
+  title: XSOnboarding Accounts Service
+  description: This service is used to register account on portal and also perform operations related to accounts
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8002'
+    description: This url is used for testing api's locally
+  - url: 'https://xs-onboarding.xenon.work/api/auth'
+    description: This url is used to test api of develop
+  - url: 'https://careers.xenonstack.com/onboarding/api/auth'
+    description: This url is used to test api of production
+tags:
+  - name: accounts
+  - name: admin
+    description: Following api's require admin access
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /v1/invite:
+    post:
+      tags:
+        - admin
+      summary: sends invite token for registration on portal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invite:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      level:
+                        type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: invite link sent
+                  successful_sents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        level:
+                          type: string
+                        message:
+                          type: string
+                  unsuccessful_sents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        level:
+                          type: string
+                        message:
+                          type: string
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid email address
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+  /v1/admininvite:
+    post:
+      tags:
+        - admin
+      summary: 'sends invite token for admin roles, values can be Business Analyst, P&C,Reviewer registration on portal'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invite:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      role:
+                        type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: invite link sent
+                  successful_sents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        level:
+                          type: string
+                        message:
+                          type: string
+                  unsuccessful_sents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        level:
+                          type: string
+                        message:
+                          type: string
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid email address
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+  /v1/assignreviewer:
+    post:
+      tags:
+        - admin
+      summary: used to assign reviewers to interns
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reviewers:
+                  type: array
+                  items:
+                    type: string
+                interns:
+                  type: array
+                  items:
+                    type: string    
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation succesful
+                  successful:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        message:
+                          type: string
+                  unsuccess:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        message:
+                          type: string
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid email address
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+  /v1/signup:
+    post:
+      tags:
+        - accounts
+      summary: used to register account from email invite link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                name:
+                  type: string
+                contact:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: account registered successfully
+                  role_id:
+                    type: string
+                    format: string
+                    example: user
+                  name:
+                    type: string
+                    format: string
+                    example: user
+                  email:
+                    type: string
+                    format: string
+                    example: email
+                  level:
+                    type: string
+                    format: string
+                    example: L1
+                  expire:
+                    type: string
+                    format: string
+                    example: '2020-07-15T14:43:45+05:30'
+                  token:
+                    type: string
+                    format: string
+                    example: jwt token
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/admin-signup:
+    post:
+      tags:
+        - accounts
+      summary: used to register account from email invite link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                name:
+                  type: string
+                contact:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: account registered successfully
+                  role_id:
+                    type: string
+                    format: string
+                    example: user
+                  name:
+                    type: string
+                    format: string
+                    example: user
+                  email:
+                    type: string
+                    format: string
+                    example: email
+                  level:
+                    type: string
+                    format: string
+                    example: L1
+                  expire:
+                    type: string
+                    format: string
+                    example: '2020-07-15T14:43:45+05:30'
+                  token:
+                    type: string
+                    format: string
+                    example: jwt token
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/login:
+    post:
+      tags:
+        - accounts
+      summary: used for login using email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: Login Successful
+                  role_id:
+                    type: string
+                    format: string
+                    example: user
+                  name:
+                    type: string
+                    format: string
+                    example: user
+                  email:
+                    type: string
+                    format: string
+                    example: email
+                  level:
+                    type: string
+                    format: string
+                    example: L1
+                  expire:
+                    type: string
+                    format: string
+                    example: '2020-07-15T14:43:45+05:30'
+                  token:
+                    type: string
+                    format: string
+                    example: jwt token
+                  link:
+                    type: string
+                    format: string
+                    example: aws link
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: Invalid Credentials
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/register:
+    post:
+      tags:
+        - accounts
+      summary: 'used to store employee personal,education and other relevant info'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                personal_info:
+                  type: object
+                  properties:
+                    fathers_name:
+                      type: string
+                    mothers_name:
+                      type: string
+                    gender:
+                      type: string
+                    dateofbirth:
+                      type: string
+                    blood_group:
+                      type: string
+                    marital_status:
+                      type: string
+                    spouse_name:
+                      type: string
+                    spouse_contact:
+                      type: string
+                    profile_img_link:
+                      type: string
+                user_address:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      address_type:
+                        type: string
+                      address:
+                        type: string
+                      city:
+                        type: string
+                      district:
+                        type: string
+                      state:
+                        type: string
+                      pincode:
+                        type: number
+                      country:
+                        type: string
+                emergency_contact:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      contact_name:
+                        type: string
+                      contact_number:
+                        type: string
+                education:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      institution:
+                        type: string
+                      location:
+                        type: string
+                      year:
+                        type: string
+                      percentage:
+                        type: number
+                      marksheet_link:
+                        type: array
+                        items:
+                          type: string
+                      degree_link:
+                        type: string
+                others:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      certificate_link:
+                        type: string
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: Information saved successfully
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: 'Please enter required fields '
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/resetpassword:
+    post:
+      tags:
+        - accounts
+      summary: used in case of forget password and reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: email sent successfully
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: Invalid email
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/acceptpolicy:
+    post:
+      tags:
+        - accounts
+      summary: used to accept policy
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: Operation Successful
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: You are not authorised
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/changelevel:
+    post:
+      tags:
+        - admin
+      summary: used to change level of intern
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                level:
+                  type: string
+                department:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: level changed successfully
+        '404':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: no user found
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/logout:
+    get:
+      tags:
+        - accounts
+      summary: used to get logged out of the portal
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: Logout Successful
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: Invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/batch:
+    get:
+      tags:
+        - accounts
+      summary: used to get logged out of the portal
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: Logout Successful
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: Invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/refreshtoken:
+    get:
+      tags:
+        - accounts
+      summary: used to get logged out of the portal
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: successful
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: Invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  '/v1/internslist/{level}':
+    get:
+      tags:
+        - admin
+      summary: used to get list of interns
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: path
+          name: level
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: level of intern
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number for list
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+        - in: query
+          name: score
+          schema:
+            type: string
+          description: 'sort list'
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: 'searching on the basis of name and email'
+        - in: query
+          name: module
+          schema:
+            type: string
+          description: 'searching on the basis of module'
+        - in: query
+          name: batch
+          schema:
+            type: string
+          description: 'filter on the basis of batch details'
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation successful
+                  list:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        name:
+                          type: string
+                        task:
+                          type: string
+                        scoring:
+                          type: number
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  '/v1/reports/{level}':
+    get:
+      tags:
+        - admin
+      summary: used to get reports list of interns
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: path
+          name: level
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: level of intern
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number for list
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+        - in: query
+          name: batch
+          schema:
+            type: string
+          description: 'Enter batch date of which reports are required'
+        - in: query
+          name: module
+          schema:
+            type: string
+          description: 'Enter module name of which reports is demanded'
+        - in: query
+          name: sortby
+          schema:
+            type: string
+          description: 'Enter module name of which reports is demanded'
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation successful
+                  list:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        name:
+                          type: string
+                        task:
+                          type: string
+                        scoring:
+                          type: number
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/adminlist:
+    get:
+      tags:
+        - admin
+      summary: used to get list of interns
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number for list
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+        - in: query
+          name: role
+          schema:
+            type: string
+          description: role value of admin
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation successful
+                  list:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: number
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/user/profile:
+    get:
+      tags:
+        - user
+      summary: used to get userinfo with email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation successful
+                  accounts:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      email:
+                        type: string
+                      name:
+                        type: string
+                      contact_no:
+                        type: string
+                      role:
+                        type: string
+                      level:
+                        type: string
+                      account_status:
+                        type: string
+                      account_policy:
+                        type: string
+                      timestamp:
+                        type: number
+                  personal_info:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      fathers_name:
+                        type: string
+                      mothers_name:
+                        type: string
+                      gender:
+                        type: string
+                      dateofbirth:
+                        type: string
+                      blood_group:
+                        type: string
+                      marital_status:
+                        type: string
+                      spouse_name:
+                        type: string
+                      spouse_contact:
+                        type: string
+                      profile_img_link:
+                        type: string
+                  user_address:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        address_type:
+                          type: string
+                        address:
+                          type: string
+                        city:
+                          type: string
+                        district:
+                          type: string
+                        state:
+                          type: string
+                        pincode:
+                          type: number
+                        country:
+                          type: string
+                  education_details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        institution:
+                          type: string
+                        location:
+                          type: string
+                        year:
+                          type: string
+                        percentage:
+                          type: number
+                        marksheet_link:
+                          type: array
+                          items:
+                            type: string
+                  emergency_contacts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        contact_name:
+                          type: string
+                        contact_number:
+                          type: string
+                  other_certiicates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        certificate_link:
+                          type: string
+                  pandcinfo:
+                    type: object
+                    properties:
+                      buddy:
+                        type: string
+                      coach:
+                        type: string
+                      headcoach:
+                        type: string
+                      project_manager:
+                        type: string
+                      nexaops:
+                        type: string
+                      people_manager:
+                        type: string
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+    put:
+        tags:
+          - user
+        summary: 'used to update employee personal,education and other relevant info'
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  account_info:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      contact_no:
+                        type: string
+                  personal_info:
+                    type: object
+                    properties:
+                      fathers_name:
+                        type: string
+                      mothers_name:
+                        type: string
+                      gender:
+                        type: string
+                      dateofbirth:
+                        type: string
+                      blood_group:
+                        type: string
+                      marital_status:
+                        type: string
+                      spouse_name:
+                        type: string
+                      spouse_contact:
+                        type: string
+                      profile_img_link:
+                        type: string
+                  user_address:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        address_type:
+                          type: string
+                        address:
+                          type: string
+                        city:
+                          type: string
+                        district:
+                          type: string
+                        state:
+                          type: string
+                        pincode:
+                          type: number
+                        country:
+                          type: string
+                  emergency_contact:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        contact_name:
+                          type: string
+                        contact_number:
+                          type: string
+                  education:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        institution:
+                          type: string
+                        location:
+                          type: string
+                        year:
+                          type: string
+                        percentage:
+                          type: number
+                        marksheet_link:
+                          type: array
+                          items:
+                            type: string
+                        degree_link:
+                          type: string
+                  others:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        certificate_link:
+                          type: string
+        security:
+          - bearer: []
+        x-codegen-request-body-name: accounts
+        responses:
+          '200':
+            description: A JSON array of response
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                      format: bool
+                      example: false
+                    message:
+                      type: string
+                      format: string
+                      example: Information updated successfully
+          '400':
+            description: A JSON array of response
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                      format: bool
+                      example: true
+                    message:
+                      type: string
+                      format: string
+                      example: 'Please enter required fields '
+          '500':
+            description: A JSON array of response
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: boolean
+                      format: bool
+                      example: true
+                    message:
+                      type: string
+                      format: string
+                      example: internal server error
+  /v1/export:
+    get:
+      tags:
+        - admin
+      summary: used to export list of users as csv
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: query
+          name: level
+          schema:
+            type: string
+          description: level of employee to get list for
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: You are not authorised
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/user/profilepicture:
+    get:
+      tags:
+        - user
+      summary: used to get user name and profile picture
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    format: string
+                    example: "someone"
+                  link:
+                    type: string
+                    format: string
+                    example: "aws link"
+            
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: You are not authorised
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  '/v1/userprofile/{email}':
+    get:
+      tags:
+        - admin
+      summary: used to get userinfo with email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: userid of intern
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation successful
+                  accounts:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      email:
+                        type: string
+                      name:
+                        type: string
+                      contact_no:
+                        type: string
+                      role:
+                        type: string
+                      level:
+                        type: string
+                      account_status:
+                        type: string
+                      account_policy:
+                        type: string
+                      timestamp:
+                        type: number
+                  personal_info:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      fathers_name:
+                        type: string
+                      mothers_name:
+                        type: string
+                      gender:
+                        type: string
+                      dateofbirth:
+                        type: string
+                      blood_group:
+                        type: string
+                      marital_status:
+                        type: string
+                      spouse_name:
+                        type: string
+                      spouse_contact:
+                        type: string
+                      profile_img_link:
+                        type: string
+                  user_address:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        address_type:
+                          type: string
+                        address:
+                          type: string
+                        city:
+                          type: string
+                        district:
+                          type: string
+                        state:
+                          type: string
+                        pincode:
+                          type: number
+                        country:
+                          type: string
+                  education_details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        institution:
+                          type: string
+                        location:
+                          type: string
+                        year:
+                          type: string
+                        percentage:
+                          type: number
+                        marksheet_link:
+                          type: array
+                          items:
+                            type: string
+                  emergency_contacts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        contact_name:
+                          type: string
+                        contact_number:
+                          type: string
+                  other_certiicates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        certificate_link:
+                          type: string
+                  pandcinfo:
+                    type: object
+                    properties:
+                      buddy:
+                        type: string
+                      coach:
+                        type: string
+                      headcoach:
+                        type: string
+                      project_manager:
+                        type: string
+                      nexaops:
+                        type: string
+                      people_manager:
+                        type: string
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  '/v1/listreviewer/{email}':
+    get:
+      tags:
+        - admin
+      summary: used to get userinfo with email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: userid of intern
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation successful
+                  list:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/setpassword:
+    put:
+      tags:
+        - accounts
+      summary: used to set new password from token sent in email for forget/reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                token:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: new password set Successful
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/changepassword:
+    put:
+      tags:
+        - accounts
+      summary: used to set new password by passing current password
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                new_password:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: new password set Successful
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  '/v1/accountstatus/{status}/userid/{email}':
+    put:
+      tags:
+        - admin
+      summary: used to deactivate or activate account of a user
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: email of intern
+        - in: path
+          name: status
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: values can be active or blocked
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation successful
+        '404':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: no user found
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  '/v1/deletereviewer/{email}/user/{uemail}':
+    delete:
+      tags:
+        - admin
+      summary: used to delete reviewer
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: email of reviewer
+        - in: path
+          name: uemail
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: user email id
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: Reviewer deleted successfuly
+                  list:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: User not found
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  '/v1/delete/{email}':
+    delete:
+      tags:
+        - admin
+      summary: used to delete account of a user
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: email of intern
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: account deactivated successfully
+        '404':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: no user found
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  '/v1/admin/{email}':
+    delete:
+      tags:
+        - admin
+      summary: used to delete account of a admin
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: email of intern
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: account deleted successfully
+        '404':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: no user found
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/google/invite:
+    post:
+      tags:
+        - google
+      summary: sends invite token for registration on portal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                start:
+                  type: number
+                end: 
+                  type: number
+                email:
+                  type: array
+                  items:
+                    type: string
+                    
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: "Invite sent successfully"
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "Invalid email"
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+  /v1/google/check:
+    get:
+      tags:
+        - google
+      summary: check if credentials are present 
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: "Invite sent successfully"
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "Invalid email"
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+  /v1/google/login :
+    get:
+      tags:
+        - google
+      summary: google signin
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: "Invite sent successfully"
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "Invalid email"
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+  /v1/department:
+    post:
+      tags:
+        - department
+      summary: 'create new department'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                short_name:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: department created successfuly
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: department with name already exists
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+    get:
+      tags:
+        - department
+      summary: used to get list of departments
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number for list
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: operation successful
+                  list:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: number
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: invalid token
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: internal server error
+  /v1/department/{id}:
+    put:
+      tags:
+        - department
+      summary: 'update department'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: id of department
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                short_name:
+                  type: string
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: department updated successfuly
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: department with name already exists
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+    delete:
+      tags:
+        - department
+      summary: 'update department'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: id of department
+      responses:
+        '200':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: department deleted successfuly
+        '400':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while deleting department
+        '500':
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: error occured while sending email
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts

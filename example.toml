@@ -1,0 +1,34 @@
+[Service]
+  Port = "8002"
+  IsLogoutOthers = "true"
+  Environment = "development"
+  HostAddr = "xsonboarding.xenon.team"
+  InviteLinkTimeout=604800
+  VerifyLinkTimeout=600
+  Build=""
+[Database]
+  name = "xsonboarding"
+  host = "localhost"
+  port = "5432"
+  user = "postgres"
+  pass = "postgres"
+  ideal = "50"
+[Admin]
+  email = "admin@xenonstack.com"
+  pass = "admin"
+[JWT]
+  PrivateKey = "abcd"
+[NatsServer]
+  url = "localhost:4222"
+  username = ""
+  password = ""
+  token = ""
+[CareerPortal]
+  FrontEndAddress = "https://careers.xenon.work"
+  Username = "admin@xenonstack.com"
+  Password = "admin"
+[Google]
+  ClientID = "xxCLIENTID"
+  ClientKey = "xxCLIENTKEY"
+  Scopes = "https://www.googleapis.com/auth/calendar.events"
+  Redirect = "http://localhost:8002/v1/google/callback"
